@@ -1,0 +1,32 @@
+model:
+sets:
+cities/1..30/:level;
+link(cities, cities): distance, x;   !距离矩阵;
+endsets
+data:
+distance = @ole('C:\Users\21713\Desktop\distance.xlsx','data');
+enddata
+n = @size(cities);
+
+!目标函数;
+min=@sum(link:distance * x);
+
+@For(cities(k):
+     !进入城市k;
+     @sum(cities(i) | i #ne# k: x(i,k)) = 1;
+
+     !离开城市k;
+     @sum(cities(j) | j #ne# k: x(k,j)) = 1;
+    );
+
+    !保证不出现子圈;
+    @for(cities(i) | i #gt# 1:
+    @for(cities(j) | j #gt# 1 #and# i#ne#j:
+        level(i)-level(j) + n*x(i,j) <= n-1);
+     );
+    
+    !限制u的范围以加速模型的求解，保证所加限制并不排除掉TSP问题的最优解;
+    @for(cities(i) | i #gt# 1: level(i) <= n-2);
+    !定义x为 0\1变量;
+    @for(link:@bin(x));
+end
