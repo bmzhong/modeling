@@ -1,9 +1,6 @@
 clc;clear;
 global process process_1 process_2
 process=[1,2,3,4,5,6,7,8];process_1=[];process_2=[];
-% process_1=[1,2,3,4];
-% process_2=[5,6,7,8];
-% [sumMatrial_1,matrial_1]=solve(process_1,process_2);
 sumMatrialMax=0;matrialMax=[];
 for i=1:7
     A=nchoosek(process,i);
@@ -26,7 +23,6 @@ for i=1:7
         end 
     end
 end
-disp(sumMatrialMax)
 function [sumMatrial,matrial]=solve(process_1,process_2)
     global process1 process2 len1 len2  status t moveTime
     global processTime1 processTime2 oddTime evenTime washTime
@@ -157,24 +153,8 @@ function []=handle1(minTime,CNCNumber)
     else
         pos=CNCNumber;
     end
-    beakDownPercentage=rand();
-    isBreakDown=0;
-    if beakDownPercentage<0.01
-        isBreakDown=1;
-    end
-    breakDownTimePoint=rand();
-    handleTime=randn(15,1);
-    if handleTime<10
-        handleTime=10;
-    end
-    if handleTime>20
-        handleTime=20;
-    end
-    if isBreakDown
-        status(CNCNumber,1)=round(processTime1*breakDownTimePoint+handleTime);
-    else
-        status(CNCNumber,1)=processTime1;
-    end
+    status(CNCNumber,1)=processTime1;
+    status(CNCNumber,2)=k;
     matrial(k,1)=CNCNumber;
     matrialNumber=status(CNCNumber,2);
     if mod(CNCNumber,2)==0
@@ -184,7 +164,6 @@ function []=handle1(minTime,CNCNumber)
         matrial(matrialNumber,3)=t-oddTime;
         matrial(k,2)=t-oddTime;
     end
-    status(CNCNumber,2)=k;
     for j=1:8
         if j==CNCNumber
             continue;
@@ -196,22 +175,6 @@ function []=handle1(minTime,CNCNumber)
                 status(j,1)=0;
             end
         end
-    end
-    if isBreakDown
-        return
-    end
-    beakDownPercentage=rand();
-    isBreakDown=0;
-    if beakDownPercentage<0.01
-        isBreakDown=1;
-    end
-    breakDownTimePoint=rand();
-    handleTime=randn(15,1);
-    if handleTime<10
-        handleTime=10;
-    end
-    if handleTime>20
-        handleTime=20;
     end
     prepareMatrial=matrialNumber;
     [minTime,CNCNumber]=getMinTimeAndCNCNumber(2);
@@ -247,23 +210,11 @@ function []=handle1(minTime,CNCNumber)
         end
     end
     if status(CNCNumber,2)~=0
-        if isBreakDown
-            status(CNCNumber,1)=round((processTime2-washTime)*breakDownTimePoint+handleTime);
-        else
-            status(CNCNumber,1)=(processTime2-washTime);
-        end
+        status(CNCNumber,1)=processTime2-washTime;
     else
-        if isBreakDown
-            status(CNCNumber,1)=round(processTime2*breakDownTimePoint+handleTime);
-        else
-            status(CNCNumber,1)=processTime2;
-        end
+        status(CNCNumber,1)=processTime2;
     end
-    if isBreakDown
-        status(CNCNumber,2)=0;
-    else
-        status(CNCNumber,2)=prepareMatrial;
-    end
+    status(CNCNumber,2)=prepareMatrial;
     for j=1:8
         if j==CNCNumber
             continue;
