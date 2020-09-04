@@ -56,6 +56,7 @@ function [sumMatrial,matrial]=solve(process_1,process_2)
         end
         status(CNCNumber,1)=processTime1;
         matrial(k,1)=CNCNumber;
+        matrial(k,2)=t;
         status(CNCNumber,2)=k;
         for j=1:8
             if j==CNCNumber
@@ -154,7 +155,6 @@ function []=handle1(minTime,CNCNumber)
         pos=CNCNumber;
     end
     status(CNCNumber,1)=processTime1;
-    status(CNCNumber,2)=k;
     matrial(k,1)=CNCNumber;
     matrialNumber=status(CNCNumber,2);
     if mod(CNCNumber,2)==0
@@ -164,6 +164,7 @@ function []=handle1(minTime,CNCNumber)
         matrial(matrialNumber,3)=t-oddTime;
         matrial(k,2)=t-oddTime;
     end
+    status(CNCNumber,2)=k;
     for j=1:8
         if j==CNCNumber
             continue;

@@ -17,24 +17,18 @@ while t<=T
     for i=1:8
         if mod(i,2)==1
             r=abs(i-pos)/2+1;
-            if status(i,2)~=0
-                nextTime(i)=moveTime(r)+oddTime+washTime;
-            else
-                nextTime(i)=moveTime(r)+oddTime;
-            end
-            if status(i,1)~=0 && moveTime(r)<status(i,1)
-                nextTime(i)=nextTime(i)+status(i,1)-moveTime(r);
-            end
+            upDownTime=oddTime;
         else
             r=abs(i-1-pos)/2+1;
-            if status(i,2)~=0
-                nextTime(i)=moveTime(r)+evenTime+washTime;
-            else
-                nextTime(i)=moveTime(r)+evenTime;
-            end
-            if status(i,1)~=0 && moveTime(r)<status(i,1)
-                nextTime(i)=nextTime(i)+status(i,1)-moveTime(r);
-            end
+            upDownTime=evenTime;
+        end
+        if status(i,2)~=0
+            nextTime(i)=moveTime(r)+upDownTime+washTime;
+        else
+            nextTime(i)=moveTime(r)+upDownTime;
+        end
+        if status(i,1)~=0 && moveTime(r)<status(i,1)
+            nextTime(i)=nextTime(i)+status(i,1)-moveTime(r);
         end
     end
     minTime=min(nextTime);
@@ -66,12 +60,12 @@ while t<=T
         isBreakDown=1;
     end
     breakDownTimePoint=rand();
-    handleTime=randn(15,1);
+    handleTime=randn(900,1);
     if handleTime<10
-        handleTime=10;
+        handleTime=600;
     end
     if handleTime>20
-        handleTime=20;
+        handleTime=1200;
     end
     if status(CNCNumber,2)~=0
         if isBreakDown

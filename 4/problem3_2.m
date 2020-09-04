@@ -60,6 +60,7 @@ function [sumMatrial,matrial]=solve(process_1,process_2)
         end
         status(CNCNumber,1)=processTime1;
         matrial(k,1)=CNCNumber;
+        matrial(k,2)=t;
         status(CNCNumber,2)=k;
         for j=1:8
             if j==CNCNumber
@@ -163,12 +164,12 @@ function []=handle1(minTime,CNCNumber)
         isBreakDown=1;
     end
     breakDownTimePoint=rand();
-    handleTime=randn(15,1);
+    handleTime=randn(900,1);
     if handleTime<10
-        handleTime=10;
+        handleTime=600;
     end
     if handleTime>20
-        handleTime=20;
+        handleTime=1200;
     end
     if isBreakDown
         status(CNCNumber,1)=round(processTime1*breakDownTimePoint+handleTime);
