@@ -1,16 +1,11 @@
-function [sumMatrial,matrial]=problem2(fault,dataClass)
+function [sumMatrial,matrial]=solve(fault,dataClass)
+global process1 process2 moveTime
+global processTime1 processTime2 oddTime evenTime washTime
 if nargin==0
     fault=0;dataClass=1;
 elseif nargin==1
     dataClass=1;
 end
-% dataClass=3;
-[sumMatrial,matrial]=solve(fault,dataClass);
-end
-function [sumMatrial,matrial]=solve(fault_,dataClass)
-global process1 process2 moveTime fault
-global processTime1 processTime2 oddTime evenTime washTime
-fault=fault_;
 if dataClass==1
     moveTime=[0,20,33,46];processTime1=400;processTime2=378;
     oddTime=28;evenTime=31;washTime=25;
@@ -44,12 +39,11 @@ for i=1:7
         end
     end
 end
-sumMatrial=sumMatrialMax;
-matrial=matrialMax;
+disp(sumMatrialMax);
 end
 function [sumMatrial,matrial]=caculate()
-global process1 process2 len1 len2  status t
-global processTime1
+global process1 process2 len1 len2  status t moveTime
+global processTime1 processTime2 oddTime evenTime washTime
 global k sumMatrial T nextTime pos matrial
 T=8*60*60; %每班次连续时间（单位秒）；
 t=0;%当前时刻；
@@ -86,6 +80,7 @@ for i=1:len1
             end
         end
     end
+end
 end
 while t<=T
     [minTime1,CNCNumber1]=getMinTimeAndCNCNumber(1);
@@ -161,7 +156,7 @@ for i=1:len2
 end
 end
 function []=handle1(minTime,CNCNumber)
-global status t k sumMatrial T  pos matrial fault
+global status t k sumMatrial T  pos matrial
 global processTime1 processTime2 oddTime evenTime washTime
 t=t+minTime;
 k=k+1;
@@ -170,24 +165,18 @@ if mod(CNCNumber,2)==0
 else
     pos=CNCNumber;
 end
-if fault
-    beakDownPercentage=rand();
-    isBreakDown=0;
-    if beakDownPercentage<0.01
-        isBreakDown=1;
-    end
-    breakDownTimePoint=rand();
-    handleTime=randn(900,1);
-    if handleTime<10
-        handleTime=600;
-    end
-    if handleTime>20
-        handleTime=1200;
-    end
-else
-    breakDownTimePoint=1;
-    isBreakDown=0;
-    handleTime=0;
+beakDownPercentage=rand();
+isBreakDown=0;
+if beakDownPercentage<0.01
+    isBreakDown=1;
+end
+breakDownTimePoint=rand();
+handleTime=randn(900,1);
+if handleTime<10
+    handleTime=600;
+end
+if handleTime>20
+    handleTime=1200;
 end
 if isBreakDown
     status(CNCNumber,1)=round(processTime1*breakDownTimePoint+handleTime);
@@ -220,23 +209,17 @@ if isBreakDown
     return
 end
 beakDownPercentage=rand();
-if fault
-    isBreakDown=0;
-    if beakDownPercentage<0.01
-        isBreakDown=1;
-    end
-    breakDownTimePoint=rand();
-    handleTime=randn(900,1);
-    if handleTime<10
-        handleTime=600;
-    end
-    if handleTime>20
-        handleTime=1200;
-    end
-else
-    isBreakDown=0;
-    breakDownTimePoint=1;
-    handleTime=0;
+isBreakDown=0;
+if beakDownPercentage<0.01
+    isBreakDown=1;
+end
+breakDownTimePoint=rand();
+handleTime=randn(900,1);
+if handleTime<10
+    handleTime=600;
+end
+if handleTime>20
+    handleTime=1200;
 end
 prepareMatrial=matrialNumber;
 [minTime,CNCNumber]=getMinTimeAndCNCNumber(2);

@@ -1,15 +1,40 @@
-clc;clear;
+function [sumMatrial,matrial]=problem1(fault,dataClass)
+clc;
+if nargin==0
+    fault=0;dataClass=1;
+elseif nargin==1
+    dataClass=1;
+end
+dataClass=3;
+[sumMatrial,matrial]=solve(fault,dataClass);
+assignin('base','sumMatrial',sumMatrial);
+assignin('base','matrial',matrial);
+if fault==0
+    printGraph(matrial);
+end
+end
+function [sumMatrial,matrial]=solve(fault,dataClass)
+moveTime=[0,20,33,46];%RGV移动i个单位所需时间；
+processTime=560;%加工一道工序所需时间；
+oddTime=28;%RGV为CNC1#，3#，5#，7#一次上下料所需时间;
+evenTime=31;%RGV为CNC2#，4#，6#，8#一次上下料所需时间;
+washTime=25;%RGV完成一个物料的清洗作业所需时间;
+if dataClass==1
+    moveTime=[0,20,33,46];processTime=560;
+    oddTime=28;evenTime=31;washTime=25;
+elseif dataClass==2
+    moveTime=[0,23,41,59];processTime=580;
+    oddTime=30;evenTime=35;washTime=30;
+elseif dataClass==3
+    moveTime=[0,18,32,46];processTime=545;
+    oddTime=27;evenTime=32;washTime=25;
+end
 T=8*60*60; %每班次连续时间（单位秒）；
 t=0;%当前时刻；
 status=zeros(8,2);
 pos=1;%RGV当前时刻所在的位置，pos的值域为1,3,5,7。
 matrial=zeros(T,3);%matrial(i,:)的第1列第2列第3列分别表示第i个生料的
 %加工CNC编号，上料开始时间，下料开始时间；
-moveTime=[0,20,33,46];%RGV移动i个单位所需时间；
-processTime=560;%加工一道工序所需时间；
-oddTime=28;%RGV为CNC1#，3#，5#，7#一次上下料所需时间;
-evenTime=31;%RGV为CNC2#，4#，6#，8#一次上下料所需时间;
-washTime=25;%RGV完成一个物料的清洗作业所需时间;
 nextTime=zeros(8,1);%储存每个CNC需要多少时间才能进行到下一个状态。
 k=0;
 sumMatrial=0;
@@ -54,12 +79,38 @@ while t<=T
             sumMatrial=sumMatrial+1;
         end
     end
-    if status(CNCNumber,2)~=0
-        status(CNCNumber,1)=processTime-washTime;
+    if fault
+        beakDownPercentage=rand();
+        isBreakDown=0;
+        if beakDownPercentage<0.01
+            isBreakDown=1;
+        end
+        breakDownTimePoint=rand();
+        handleTime=randn(900,1);
+        if handleTime<10
+            handleTime=600;
+        end
+        if handleTime>20
+            handleTime=1200;
+        end
     else
-        status(CNCNumber,1)=processTime;
+        isBreakDown=0;
+        breakDownTimePoint=1;
+        handleTime=0;
     end
-    
+    if status(CNCNumber,2)~=0
+        if isBreakDown
+            status(CNCNumber,1)=(processTime-washTime)*breakDownTimePoint+handleTime;
+        else
+            status(CNCNumber,1)=processTime-washTime;
+        end
+    else
+        if isBreakDown
+            status(CNCNumber,1)=processTime*breakDownTimePoint+breakDownTimePoint;
+        else
+            status(CNCNumber,1)=processTime;
+        end
+    end
     matrial(k,1)=CNCNumber;
     if status(CNCNumber,2)~=0
         if mod(CNCNumber,2)==0
@@ -75,6 +126,9 @@ while t<=T
         end
     end
     status(CNCNumber,2)=k;
+    if isBreakDown
+        status(CNCNumber,2)=0;
+    end
     for j=1:8
         if j==CNCNumber
             continue;
@@ -88,63 +142,4 @@ while t<=T
         end
     end
 end
-disp(sumMatrial);
-% plot(1:50,matrial(1:50,1),'-*');
-% grid on
-% figure(2)
-% p=50;
-% AX=matrial(1:p,2)';
-% BX=matrial(1:p,3)';
-% X=[AX;BX];
-% AY=[1:p];
-% BY=[1:p];
-% Y=[AY;BY];
-% line(X,Y,'LineWidth',1.5);
-% 
-% BY=[1:sumMatrial];
-% grid on
-X=1:50;
-Y=matrial(1:50,1);
-plot(X,Y,'*r');
-hold on
-for i=1:49
-     PlotLineArrow(gca, [X(i), X(i + 1)], [Y(i), Y(i + 1)], 'b', 'b');
-end
-hold off
-function PlotLineArrow(obj, x, y, markerColor, lineColor)
-% 绘制带箭头的曲线
-%{
-clear; clc;
-x = 1 : 10;
-y = sin(x);
-plot(x, y, '.')
-hold on
-for i = 1 : 9
-    PlotLineArrow(gca, [x(i), x(i + 1)], [y(i), y(i + 1)], 'b', 'r');
-end
-hold off
-%}
-% 绘制散点图
-% plot(x, y, '.', 'Color', markerColor, 'MarkerFaceColor', markerColor);
-plot(x, y);
-% 获取 Axes 位置
-posAxes = get(obj, 'Position');
-posX = posAxes(1);
-posY = posAxes(2);
-width = posAxes(3);
-height = posAxes(4);
-% 获取 Axes 范围
-limX = get(obj, 'Xlim');
-limY = get(obj, 'Ylim');
-minX = limX(1);
-maxX = limX(2);
-minY = limY(1);
-maxY = limY(2);
-% 转换坐标
-xNew = posX + (x - minX) / (maxX - minX) * width;
-yNew = posY + (y - minY) / (maxY - minY) * height;
-% 画箭头
-arrow=annotation('arrow', xNew, yNew, 'color', lineColor);
-arrow.HeadWidth =6;
-arrow.Color=[80/255,180/255,240/255];
 end

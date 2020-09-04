@@ -1,4 +1,4 @@
-clc;clear;
+function []=process1()
 T=8*60*60; %每班次连续时间（单位秒）；
 t=0;%当前时刻；
 status=zeros(8,2);
@@ -17,28 +17,25 @@ while t<=T
     for i=1:8
         if mod(i,2)==1
             r=abs(i-pos)/2+1;
-            if status(i,2)~=0
-                nextTime(i)=moveTime(r)+oddTime+washTime;
-            else
-                nextTime(i)=moveTime(r)+oddTime;
-            end
-            if status(i,1)~=0 && moveTime(r)<status(i,1)
-                nextTime(i)=nextTime(i)+status(i,1)-moveTime(r);
-            end
+            upDownTime=oddTime;
         else
             r=abs(i-1-pos)/2+1;
-            if status(i,2)~=0
-                nextTime(i)=moveTime(r)+evenTime+washTime;
-            else
-                nextTime(i)=moveTime(r)+evenTime;
-            end
-            if status(i,1)~=0 && moveTime(r)<status(i,1)
-                nextTime(i)=nextTime(i)+status(i,1)-moveTime(r);
-            end
+            upDownTime=evenTime;
+        end
+        if status(i,2)~=0
+            nextTime(i)=moveTime(r)+upDownTime+washTime;
+        else
+            nextTime(i)=moveTime(r)+upDownTime;
+        end
+        if status(i,1)~=0 && moveTime(r)<status(i,1)
+            nextTime(i)=nextTime(i)+status(i,1)-moveTime(r);
         end
     end
     minTime=min(nextTime);
     CNCNumber=find(nextTime==minTime);
+    if length(CNCNumber)>1
+        CNCNumber=CNCNumber(1);
+    end
     t=t+minTime;
     k=k+1;
     if mod(CNCNumber,2)==0
@@ -63,12 +60,12 @@ while t<=T
         isBreakDown=1;
     end
     breakDownTimePoint=rand();
-    handleTime=randn(15,1);
+    handleTime=randn(900,1);
     if handleTime<10
-        handleTime=10;
+        handleTime=600;
     end
     if handleTime>20
-        handleTime=20;
+        handleTime=1200;
     end
     if status(CNCNumber,2)~=0
         if isBreakDown
@@ -80,7 +77,7 @@ while t<=T
         if isBreakDown
             status(CNCNumber,1)=processTime*breakDownTimePoint+breakDownTimePoint;
         else
-            status(CNCNumber,1)=processTime-washTime;
+            status(CNCNumber,1)=processTime;
         end
     end
     matrial(k,1)=CNCNumber;
@@ -98,6 +95,9 @@ while t<=T
         end
     end
     status(CNCNumber,2)=k;
+    if isBreakDown
+        status(CNCNumber,2)=0;
+    end
     for j=1:8
         if j==CNCNumber
             continue;

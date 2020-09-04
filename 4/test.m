@@ -15,7 +15,9 @@
 % Y=[Ay ; By];
 % line(X,Y,'Marker','.','MarkerSize',10);
 % annotation('arrow', [1, 0.5], [0.6, 0.5]);
-
+test(1)
+function []=test(p)
+m=p;
 x = 1 : 10;
 y = sin(x);
 plot(x, y, '.')
@@ -24,6 +26,7 @@ for i = 1 : 9
     PlotLineArrow(gca, [x(i), x(i + 1)], [y(i), y(i + 1)], 'b', 'r');
 end
 hold off
+end
 % function PlotLineArrow(obj, x, y, markerColor, lineColor)
 % % 绘制带箭头的曲线
 % %{

@@ -56,6 +56,7 @@ function [sumMatrial,matrial]=solve(process_1,process_2)
         end
         status(CNCNumber,1)=processTime1;
         matrial(k,1)=CNCNumber;
+        matrial(k,2)=t;
         status(CNCNumber,2)=k;
         for j=1:8
             if j==CNCNumber
@@ -153,20 +154,7 @@ function []=handle1(minTime,CNCNumber)
     else
         pos=CNCNumber;
     end
-    beakDownPercentage=rand();
-    isBreakDown=0;
-    if beakDownPercentage<0.01
-        isBreakDown=1;
-    end
-    breakDownTimePoint=rand();
-    handleTime=randn(15,1);
-    if handleTime<10
-        handleTime=10;
-    end
-    if handleTime>20
-        handleTime=20;
-    end
-    status(CNCNumber,1)=processTime1*breakDownTimePoint+handleTime;
+    status(CNCNumber,1)=processTime1;
     matrial(k,1)=CNCNumber;
     matrialNumber=status(CNCNumber,2);
     if mod(CNCNumber,2)==0
@@ -188,22 +176,6 @@ function []=handle1(minTime,CNCNumber)
                 status(j,1)=0;
             end
         end
-    end
-    if isBreakDown
-        return
-    end
-    beakDownPercentage=rand();
-    isBreakDown=0;
-    if beakDownPercentage<0.01
-        isBreakDown=1;
-    end
-    breakDownTimePoint=rand();
-    handleTime=randn(15,1);
-    if handleTime<10
-        handleTime=10;
-    end
-    if handleTime>20
-        handleTime=20;
     end
     prepareMatrial=matrialNumber;
     [minTime,CNCNumber]=getMinTimeAndCNCNumber(2);

@@ -1,9 +1,6 @@
 clc;clear;
-global process process_1 process_2
-process=[1,2,3,4,5,6,7,8];process_1=[];process_2=[];
-% process_1=[1,2,3,4];
-% process_2=[5,6,7,8];
-% [sumMatrial_1,matrial_1]=solve(process_1,process_2);
+global process process1 process2
+process=[1,2,3,4,5,6,7,8];process1=[];process2=[];
 sumMatrialMax=0;matrialMax=[];
 for i=1:7
     A=nchoosek(process,i);
@@ -11,15 +8,15 @@ for i=1:7
     for j=1:length1
         B=A(j,:);
         length2=length(B);
-        process_1=[];process_2=[];
+        process1=[];process2=[];
         for x=1:8
             if isempty(find(B==x,1))
-                process_1=[process_1 x];
+                process1=[process1 x];
             else
-                process_2=[process_2 x];
+                process2=[process2 x];
             end
         end
-        [sumMatrial_1,matrial_1]=solve(process_1,process_2);
+        [sumMatrial_1,matrial_1]=solve();
         if sumMatrial_1>sumMatrialMax
             sumMatrialMax=sumMatrial_1;
             matrialMax=matrial_1;
@@ -27,7 +24,7 @@ for i=1:7
     end
 end
 disp(sumMatrialMax)
-function [sumMatrial,matrial]=solve(process_1,process_2)
+function [sumMatrial,matrial]=solve()
     global process1 process2 len1 len2  status t moveTime
     global processTime1 processTime2 oddTime evenTime washTime
     global k sumMatrial T nextTime pos matrial 
@@ -35,8 +32,6 @@ function [sumMatrial,matrial]=solve(process_1,process_2)
     t=0;%当前时刻；
     k=0;
     sumMatrial=0;
-    process1=process_1;
-    process2=process_2;
     len1=length(process1);
     len2=length(process2);
     moveTime=[0,20,33,46];%RGV移动i个单位所需时间；
