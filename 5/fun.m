@@ -1,6 +1,6 @@
-function [U1,R1]=fun1(distance_,U0,judge,w_,lambda_)
+function [D,R,U]=fun(velocity_,distance_,U0,w_,lambda_,Tm,judge)
 X_max=0.00015;
-velocity=70/60;
+velocity=velocity_;
 distance=distance_;
 T_max=distance/velocity;
 dt=0.001; %时间步长
@@ -16,23 +16,23 @@ for j=1:T-1
         U(i,j+1)=(1-2*lambda)*U(i,j)+lambda*(U(i+1,j)+U(i-1,j));
     end
     if judge==1
-        T0=25+7*j*dt;
+        T0=25+((173-25)/25)*(78/60)*j*dt;
     elseif judge==2
-        T0=175;
+        T0=173;
     elseif judge==3
-        T0=175+(14/3)*j*dt;
+        T0=173+((198-173)/5)*(78/60)*j*dt;
     elseif judge==4
-        T0=195;
+        T0=198;
     elseif judge==5
-        T0=195+(28/3)*j*dt;
+        T0=198+((230-198)/5)*(78/60)*j*dt;
     elseif judge==6
-        T0=235;
+        T0=230;
     elseif judge==7
-        T0=235+(14/3)*j*dt;
+        T0=230+((257-230)/5)*(78/60)*j*dt;
     elseif judge==8
-        T0=255;
+        T0=257;
     elseif judge==9
-        T0=255-(161/3)*j*dt;
+        T0=257+((25-257)/5)*(78/60)*j*dt;
     elseif judge==10
         T0=25;
     elseif judge==11
@@ -46,5 +46,6 @@ for j=1:T-1
         U(X,j+1)=(dx*T0+w*U(X-1,j+1))/(dx+w);
     end
 end
-U1=U(:,T);
-R1=U(floor(X/2),1:500:end);
+D=U(:,T);
+R=U(floor(X/2),1:500:end);
+end

@@ -6,11 +6,11 @@ P=Data(:,2);
 error_=inf;
 W=0;LAMBDA=0;
 w1=1e-4;
-lambda1=0.072;
-for w1=0.8e-4:1e-5:1.1e-4
-    for lambda1=0.150:0.001:0.180
-        for w=0.78e-4:1e-5:1.1e-4
-            for lambda=0.150:0.001:0.180
+lambda1=0.079;
+for w1=1e-4
+    for lambda1=0.117
+        for w=7.8e-5
+            for lambda=0.18
                 [U1,R1]=fun1(25,25,1,w,lambda);
                 [U2,R2]=fun1(5*smallZones+4*interval,U1,2,w,lambda);
                 [U3,R3]=fun1(interval,U2,3,w,lambda);
@@ -33,6 +33,8 @@ for w1=0.8e-4:1e-5:1.1e-4
                     error_=error;
                     W=w;
                     LAMBDA=lambda;
+                    W1=w1;
+                    LAMBDA1=lambda1;
                 end
             end
         end

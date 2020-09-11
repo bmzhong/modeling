@@ -1,0 +1,83 @@
+w1=8e-5;lambda1=0.08;w=7.8e-5;lambda=0.18;
+smallZones=30.5;
+X_max=0.00015;
+dx=0.000001;
+dt=0.001; 
+X=ceil(X_max/dx);
+interval=5;
+velocity=78/60;
+[U1,R1]=fun(25,25,1,w,lambda);
+[U2,R2]=fun(5*smallZones+4*interval,U1,2,w,lambda);
+[U3,R3]=fun(interval,U2,3,w,lambda);
+[U4,R4]=fun(smallZones,U3,4,w,lambda);
+[U5,R5]=fun(interval,U4,5,w,lambda);
+[U6,R6]=fun(smallZones,U5,6,w,lambda);
+[U7,R7]=fun(interval,U6,7,w,lambda);
+[U8,R8]=fun(2*smallZones+interval,U7,8,w,lambda);
+[U9,R9]=fun(interval,U8,9,w1,lambda1);
+[U10,R10]=fun(2*smallZones+interval,U9,10,w1,lambda1);
+[U11,R11]=fun(25,U10,11,w1,lambda1);
+R=[R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11];
+U=[U1 U2 U3 U4 R5 R6 R7 R8 R9 R10 R11];
+plot(R,'b');
+t3=(25+2.5*smallZones+interval)/velocity;
+index3=t3/dt;
+T3=U(floor(X/2),index3);
+t6=(25+5.5*smallZones+5*interval)/velocity;
+index6=t6/dt;
+T6=U(floor(X/2),index6);
+t8=(25+8*smallZones+7*interval)/velocity;
+index8=t8/dt;
+T8=U(floor(X/2),index8);
+
+function [U,R1]=fun(distance_,U0,judge,w_,lambda_)
+X_max=0.00015;
+velocity=78/60;
+distance=distance_;
+T_max=distance/velocity;
+dt=0.001; %时间步长
+dx=0.000001;
+w=w_;
+lambda=lambda_;
+X=ceil(X_max/dx);
+T=ceil(T_max/dt);
+U=zeros(X,T);
+U(:,1)=U0;
+for j=1:T-1
+    for i=2:X-1
+        U(i,j+1)=(1-2*lambda)*U(i,j)+lambda*(U(i+1,j)+U(i-1,j));
+    end
+    if judge==1
+        T0=25+((173-25)/25)*(78/60)*j*dt;
+    elseif judge==2
+        T0=173;
+    elseif judge==3
+        T0=173+((198-173)/5)*(78/60)*j*dt;
+    elseif judge==4
+        T0=198;
+    elseif judge==5
+        T0=198+((230-198)/5)*(78/60)*j*dt;
+    elseif judge==6
+        T0=230;
+    elseif judge==7
+        T0=230+((257-230)/5)*(78/60)*j*dt;
+    elseif judge==8
+        T0=257;
+    elseif judge==9
+        T0=257+((25-257)/5)*(78/60)*j*dt;
+    elseif judge==10
+        T0=25;
+    elseif judge==11
+        T0=25;
+    end
+    if judge==11||judge==12
+        U(1,j+1)=25+(U(1,j)-25)*exp(1)^(-dt/w);
+        U(X,j+1)=25+(U(X,j)-25)*exp(1)^(-dt/w);
+    else
+        U(1,j+1)=(dx*T0+w*U(2,j+1))/(dx+w);
+        U(X,j+1)=(dx*T0+w*U(X-1,j+1))/(dx+w);
+    end
+end
+% U1=U(:,T);
+R1=U(floor(X/2),1:500:end);
+end
