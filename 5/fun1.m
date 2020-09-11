@@ -1,12 +1,12 @@
-function [U0,R0]=fun1(distance_,U0,judge)
+function [U0,R0]=fun1(distance_,U0,judge,w_,lambda_)
 X_max=0.00015;
 velocity=70/60;
 distance=distance_;
 T_max=distance/velocity;
 dt=0.001; %时间步长
 dx=0.000001;
-w=1e-4;
-lambda=0.25;
+w=w_;
+lambda=lambda_;
 X=ceil(X_max/dx);
 T=ceil(T_max/dt);
 U=zeros(X,T);
