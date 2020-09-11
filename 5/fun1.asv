@@ -3,7 +3,7 @@ X_max=0.00015;
 velocity=70/60;
 distance=distance_;
 T_max=distance/velocity;
-dt=1e-3; %时间步长
+dt=1e-4; %时间步长
 dx=0.000001;
 w=w_;
 lambda=lambda_;
@@ -47,4 +47,4 @@ for j=1:T-1
     end
 end
 U1=U(:,T);
-R1=U(X/2,1:floor(0.5/dt):end);
+R1=U(X/2,1:500:end);
