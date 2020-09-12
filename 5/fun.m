@@ -40,5 +40,6 @@ for j=1:T-1
     U(X,j+1)=(dx*T0+w*U(X-1,j+1))/(dx+w);
 end
 D=U(:,T);
-R=U(X/2,1:floor(0.5/dt):end);
+R=U(floor(X/2),1:floor(0.5/dt):end);
+U=U(floor(X/2),:);
 end
