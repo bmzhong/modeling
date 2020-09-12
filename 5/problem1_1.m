@@ -46,7 +46,17 @@ time1=(index1(end)-index1(1))*dt;
 if time1<40||time1>90
     flag=0;
 end
+index1=find(R>217);
+time1=(index1(end)-index1(1))*0.5;
+if time1<40||time1>90
+    flag=0;
+end
 Rise=U(1:peakIndex);
+index3=find(Rise>217,1);
+S=0;
+for k=index3:peakIndex-1
+    S=S+(Rise(k)-217)*dt;
+end
 index2(1)=find(Rise>=150,1);
 index2(2)=find(Rise>190,1)-1;
 time2=(index2(2)-index2(1))*dt;
@@ -66,21 +76,24 @@ len=length(R);
 [peak,peakIndex]=max(R);
 index3=find(R>=217);
 index3=index3(end);
-plot(R,'-db','LineWidth',2.5,'MarkerIndices',1:35:len,'MarkerSize',7,'MarkerFaceColor','b');
-xlabel('æ—¶é—´(s)');
-ylabel('æ¸©åº¦(â„ƒ)');
-legend('ç‚‰æ¸©æ›²çº¿');
-x0=[0,peakIndex];
+len=length(R);
+X=(0:len-1)*0.5;
+plot(X,R,'-db','LineWidth',2.5,'MarkerIndices',1:30:len,'MarkerSize',7,'MarkerFaceColor','b');
+xlabel('Ê±¼ä(s)');
+ylabel('ÎÂ¶È(¡æ)');
+legend('Â¯ÎÂÇúÏß');
+x0=[0,peakIndex*0.5];
 y0=[peak,peak];
 hold on
 g1=plot(x0,y0,'--','LineWidth',1.5);
 set(g1,'handlevisibility','off');
-text(5,peak-5,'å³°å€¼æ¸©åº¦','FontSize',12);
-x1=[0,index3];
+text(5,peak-5,'·åÖµÎÂ¶È','FontSize',12);
+x1=[0,index3*0.5];
 y1=[217,217];
 hold on
 g2=plot(x1,y1,'--','LineWidth',1.5);
 set(g2,'handlevisibility','off');
 text(5,217-5,'217','FontSize',12);
-set(gca,'xtick',0:35:700);
+axis([0 340 0 250]);
+set(gca,'xtick',0:20:340);
 set(gca,'ytick',0:20:250);

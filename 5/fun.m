@@ -1,4 +1,5 @@
-function [D,R,U]=fun(distance,velocity,U0,w,lambda,Tm,judge)
+function [R,U]=
+function [D,R,U]=calculatePhase(distance,velocity,U0,w,lambda,Tm,judge)
 thickness=0.00015;
 interval=5;
 behindZone=25;

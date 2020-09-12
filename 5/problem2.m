@@ -60,6 +60,11 @@ while velocity_UB-velocity_LB>1e-5
     else
         velocity_UB=velocity;
     end
+    index3=find(Rise>217,1);
+    S=0;
+    for k=index3:peakIndex-1
+        S=S+(Rise(k)-217)*dt;
+    end
 end
 resultVelocity=velocity_LB*60;
 disp(resultVelocity);
