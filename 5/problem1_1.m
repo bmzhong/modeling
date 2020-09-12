@@ -1,7 +1,8 @@
-w1=0.5e-4;
-lambda1=0.0495;
-w=0.52e-4;
-lambda=0.11;
+clc;clear;
+w1=0.32e-4;
+lambda1=0.0425;
+w=0.38e-4;
+lambda=0.12;
 smallZones=30.5;
 interval=5;
 behindZone=25;
@@ -9,7 +10,7 @@ afterZone=25;
 thickness=0.00015;
 velocity=78/60;
 dx=0.000001;
-dt=0.001; 
+dt=0.001;
 X=ceil(thickness/dx);
 Tm=[173 198 230 257];
 [D1,R1,U1]=fun(behindZone,velocity,25,w,lambda,Tm,1);
@@ -35,3 +36,29 @@ T6=U(index6);
 t8=(25+8*smallZones+7*interval)/velocity;
 index8=floor(t8/dt);
 T8=U(index8);
+
+flag=1;
+[peak,peakIndex]=max(U);
+if peak<240||peak>250
+    flag=0;
+end
+index1=find(U>217);
+time1=(index1(end)-index1(1))*dt;
+if time1<40||time1>90
+    flag=0;
+end
+Rise=U(1:peakIndex);
+index2(1)=find(Rise>=150,1);
+index2(2)=find(Rise>190,1)-1;
+time2=(index2(2)-index2(1))*dt;
+if time2<60||time2>120
+    flag=0;
+end
+len=length(U);
+for i=1:len-1
+    if abs(U(i+1)-U(i))>3*dt
+        flag=0;
+        break;
+    end
+end
+disp(flag);

@@ -1,56 +1,10 @@
 clc;clear;
-smallZones=30.5;
-interval=5;
 Data=xlsread('附件.xlsx');
 P=Data(:,2);
-error_=inf;
-W=0;LAMBDA=0;
-w1=1e-4;
-lambda1=0.079;
-for w1=0.5e-4
-    for lambda1=0.0495
-        for w=0.52e-4
-            for lambda=0.11
-                [U1,R1]=fun1(25,25,1,w,lambda);
-                [U2,R2]=fun1(5*smallZones+4*interval,U1,2,w,lambda);
-                [U3,R3]=fun1(interval,U2,3,w,lambda);
-                [U4,R4]=fun1(smallZones,U3,4,w,lambda);
-                [U5,R5]=fun1(interval,U4,5,w,lambda);
-                [U6,R6]=fun1(smallZones,U5,6,w,lambda);
-                [U7,R7]=fun1(interval,U6,7,w,lambda);
-                [U8,R8]=fun1(2*smallZones+interval,U7,8,w,lambda);
-                [U9,R9]=fun1(interval,U8,9,w1,lambda1);
-                [U10,R10]=fun1(2*smallZones+interval,U9,10,w1,lambda1);
-                [U11,R11]=fun1(25,U10,11,w1,lambda1);
-                R=[R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11];
-                R(1:38)=[];
-                len=min(length(P),length(R));
-                error=0;
-                for i=1:len
-                    error=max(abs(P(i)-R(i)),error);
-                end
-                if error<error_
-                    error_=error;
-                    W=w;
-                    LAMBDA=lambda;
-                    W1=w1;
-                    LAMBDA1=lambda1;
-                end
-            end
-        end
-    end
-end
-plot(R,'r');
-hold on
-% hold on
-plot(P,'g');
-hold on
-
-
-w1=0.5e-4;
-lambda1=0.0495;
-w=0.52e-4;
-lambda=0.11;
+w1=0.32e-4;
+lambda1=0.0425;
+w=0.38e-4;
+lambda=0.12;
 smallZones=30.5;
 interval=5;
 behindZone=25;
@@ -58,7 +12,7 @@ afterZone=25;
 thickness=0.00015;
 velocity=70/60;
 dx=0.000001;
-dt=0.001; 
+dt=0.001;
 X=ceil(thickness/dx);
 Tm=[175 195 235 255];
 [D1,R1,U1]=fun(behindZone,velocity,25,w,lambda,Tm,1);
@@ -72,7 +26,36 @@ Tm=[175 195 235 255];
 [D9,R9,U9]=fun(interval,velocity,D8,w1,lambda1,Tm,9);
 [D10,R10,U10]=fun(2*smallZones+interval,velocity,D9,w1,lambda1,Tm,10);
 [D11,R11,U11]=fun(afterZone,velocity,D10,w1,lambda1,Tm,11);
-R0=[R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11];
+R=[R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11];
 U=[U1 U2 U3 U4 U5 U6 U7 U8 U9 U10 U11];
-R0(1:38)=[];
-plot(R0,'b');
+R(1:38)=[];
+plot(P,'r');
+hold on
+plot(R,'b');
+disp(max(abs(R(1:709)-P')));
+disp(mean(abs(R(1:709)-P')));
+flag=1;
+[peak,peakIndex]=max(U);
+if peak<240||peak>250
+    flag=0;
+end
+index1=find(U>217);
+time1=(index1(end)-index1(1))*dt;
+if time1<40||time1>90
+    flag=0;
+end
+Rise=U(1:peakIndex);
+index2(1)=find(Rise>=150,1);
+index2(2)=find(Rise>190,1)-1;
+time2=(index2(2)-index2(1))*dt;
+if time2<60||time2>120
+    flag=0;
+end
+len=length(U);
+for i=1:len-1
+    if abs(U(i+1)-U(i))>3*dt
+        flag=0;
+        break;
+    end
+end
+disp(flag);
