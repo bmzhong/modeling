@@ -23,11 +23,11 @@ flag1=1;
 Tm0=[];
 velocity0=0;
 Record=[];
-for i=165
-    for j=185
-        for u=225:5:245
-            for v=245:5:265
-                for velocity=velocityMin:5/60:velocityMax
+for i=165:3:185
+    for j=185:3:205
+        for u=225:3:245
+            for v=265
+                for velocity=90/60:3/60:100/60
                     Tm=[i j u v];
                     [D1,R1,U1]=fun(behindZone,velocity,25,w,lambda,Tm,1);
                     [D2,R2,U2]=fun(5*smallZones+4*interval,velocity,D1,w,lambda,Tm,2);
@@ -67,8 +67,6 @@ for i=165
                         end
                     end
                     if flag==1
-                        Temp=[Tm velocity*60 flag];
-                        Record=[Record;Temp];
                         if flag1==1
                             Tm0=Tm;
                             velocity0=velocity;
@@ -84,6 +82,8 @@ for i=165
                             resultTm=Tm;
                             resultVelocity=velocity;
                         end
+                        Temp=[Tm velocity*60 S flag];
+                        Record=[Record;Temp];
                     end
                 end
             end
@@ -94,3 +94,10 @@ disp(Record);
 % disp(resultVelocity*60);
 time=toc;
 disp(flag);
+% len=size(Record,1);
+% Q=[];
+% for i=1:len
+%     if Record(i,6)<4e6
+%         Q=[Q;Record(i,:)];
+%     end
+% end
