@@ -12,7 +12,7 @@ dx=0.000001;
 dt=0.001;
 X=ceil(thickness/dx);
 Tm=[182 203 237 254];
-velocity_LB=75/60;
+velocity_LB=76/60;
 velocity_UB=100/60;
 while velocity_UB-velocity_LB>1e-5
     velocity=(velocity_UB+velocity_LB)/2;
@@ -55,6 +55,8 @@ while velocity_UB-velocity_LB>1e-5
     end
     if flag==1
         velocity_LB=velocity;
+        plot(R);
+        hold on
     else
         velocity_UB=velocity;
     end

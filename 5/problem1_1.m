@@ -26,7 +26,6 @@ Tm=[173 198 230 257];
 [D11,R11,U11]=fun(afterZone,velocity,D10,w1,lambda1,Tm,11);
 R=[R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11];
 U=[U1 U2 U3 U4 U5 U6 U7 U8 U9 U10 U11];
-plot(R,'b');
 t3=(25+2.5*smallZones+interval)/velocity;
 index3=floor(t3/dt);
 T3=U(index3);
@@ -55,10 +54,33 @@ if time2<60||time2>120
     flag=0;
 end
 len=length(U);
+maxSlope=0;
 for i=1:len-1
+    maxSlope=max(maxSlope,abs(U(i+1)-U(i))/dt);
     if abs(U(i+1)-U(i))>3*dt
         flag=0;
-        break;
     end
 end
 disp(flag);
+len=length(R);
+[peak,peakIndex]=max(R);
+index3=find(R>=217);
+index3=index3(end);
+plot(R,'-db','LineWidth',2.5,'MarkerIndices',1:35:len,'MarkerSize',7,'MarkerFaceColor','b');
+xlabel('时间(s)');
+ylabel('温度(℃)');
+legend('炉温曲线');
+x0=[0,peakIndex];
+y0=[peak,peak];
+hold on
+g1=plot(x0,y0,'--','LineWidth',1.5);
+set(g1,'handlevisibility','off');
+text(5,peak-5,'峰值温度','FontSize',12);
+x1=[0,index3];
+y1=[217,217];
+hold on
+g2=plot(x1,y1,'--','LineWidth',1.5);
+set(g2,'handlevisibility','off');
+text(5,217-5,'217','FontSize',12);
+set(gca,'xtick',0:35:700);
+set(gca,'ytick',0:20:250);

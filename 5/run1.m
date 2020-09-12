@@ -31,10 +31,9 @@ U=[U1 U2 U3 U4 U5 U6 U7 U8 U9 U10 U11];
 R(1:38)=[];
 len1=length(P);
 len2=length(R);
-plot(P,'-ok','LineWidth',4,'MarkerIndices',1:35:len1,'MarkerSize',7,'MarkerFaceColor','k');
+plot(P,'-og','LineWidth',4,'MarkerIndices',1:35:len1,'MarkerSize',7,'MarkerFaceColor','g');
 hold on
-plot(R,'-dk','LineWidth',4,'MarkerIndices',1:35:len2,'MarkerSize',7,'MarkerFaceColor','k');
-hold on
+plot(R,'-db','LineWidth',4,'MarkerIndices',1:35:len2,'MarkerSize',7,'MarkerFaceColor','b');
 xlabel('时间(s)');
 ylabel('温度(℃)');
 legend('附件数据的炉温曲线','拟合的炉温曲线');
