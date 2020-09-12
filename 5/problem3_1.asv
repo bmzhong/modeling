@@ -1,6 +1,0 @@
-clc;clear;
-lb=[175-10 195-10 235-10 255-10 65];
-ub=[175+10 195+10 235+10 255+10 100];
-options=optim('PlotFcn',@gaplotbestf);
-[x,fval,exitflag,output,population,scores]=ga(@fitness,5,[],[],[],[],lb,ub,[],[],options);
-% val=gaoptimget(options,'Generations')
