@@ -12,7 +12,7 @@ dx=0.000001;
 dt=0.001;
 X=ceil(thickness/dx);
 Tm=[182 203 237 254];
-velocity_LB=65/60;
+velocity_LB=75/60;
 velocity_UB=100/60;
 while velocity_UB-velocity_LB>1e-5
     velocity=(velocity_UB+velocity_LB)/2;

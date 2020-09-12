@@ -23,11 +23,12 @@ flag1=1;
 Tm0=[];
 velocity0=0;
 Record=[];
-for i=165:5:185
-    for j=185:5:205
-        for u=225:5:245
-            for v=245:5:265
-                for velocity=velocityMin:5/60:velocityMax
+T0=[170,205,235,265 100/60];
+for i=170
+    for j=205
+        for u=235
+            for v=265
+                for velocity=100/60
                     Tm=[i j u v];
                     [D1,R1,U1]=fun(behindZone,velocity,25,w,lambda,Tm,1);
                     [D2,R2,U2]=fun(5*smallZones+4*interval,velocity,D1,w,lambda,Tm,2);
@@ -73,16 +74,16 @@ for i=165:5:185
                             flag1=0;
                         end
                         index3=find(Rise>217,1);
-                        S=0;
+                        S1=0;
                         for k=index3:peakIndex-1
-                            S=S+Rise(k)*0.5;
+                            S1=S1+(Rise(k)-217)*dt;
                         end
-                        if S<resultS
-                            resultS=S;
+                        if S1<resultS
+                            resultS=S1;
                             resultTm=Tm;
                             resultVelocity=velocity;
                         end
-                        Temp=[Tm velocity*60 S flag];
+                        Temp=[Tm velocity*60 S1 flag];
                         Record=[Record;Temp];
                     end
                 end
@@ -90,18 +91,23 @@ for i=165:5:185
         end
     end
 end
-disp(Record);
-% disp(resultVelocity*60);
+% disp(Record);
 time=toc;
-disp(flag);
+% disp(flag);
 index=find(U>217);
 t1=index(1);
 t3=index(end);
 [~,t2]=max(U);
-n=(t2-t1)/dt;
-m=(t3-t2)/dt;
+n=t2-t1;
+m=t3-t2;
 S2=0;
-len=min(n,m);
-for k=1:len
-    S2=S2+
+x0=min(n,m);
+y0=max(n,m);
+for k=1:x0
+    S2=S2+abs(U(t2+k)-U(t2-k))*dt;
 end
+s=sign(n-m);
+for k=x0:y0
+    S2=S2+U(t2+(-1)^s*k)*dt;
+end
+

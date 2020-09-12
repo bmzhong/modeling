@@ -23,11 +23,11 @@ flag1=1;
 Tm0=[];
 velocity0=0;
 Record=[];
-for i=165:3:185
-    for j=185:3:205
-        for u=225:3:245
+for i=172
+    for j=185
+        for u=225
             for v=265
-                for velocity=90/60:3/60:100/60
+                for velocity=92/60
                     Tm=[i j u v];
                     [D1,R1,U1]=fun(behindZone,velocity,25,w,lambda,Tm,1);
                     [D2,R2,U2]=fun(5*smallZones+4*interval,velocity,D1,w,lambda,Tm,2);
@@ -75,7 +75,7 @@ for i=165:3:185
                         index3=find(Rise>217,1);
                         S=0;
                         for k=index3:peakIndex-1
-                            S=S+Rise(k)*0.5;
+                            S=S+(Rise(k)-217)*dt;
                         end
                         if S<resultS
                             resultS=S;
@@ -94,10 +94,10 @@ disp(Record);
 % disp(resultVelocity*60);
 time=toc;
 disp(flag);
-% len=size(Record,1);
-% Q=[];
-% for i=1:len
-%     if Record(i,6)<4e6
-%         Q=[Q;Record(i,:)];
-%     end
-% end
+len=size(Record,1);
+Q=[];
+for i=1:len
+    if Record(i,6)<4e6
+        Q=[Q;Record(i,:)];
+    end
+end
