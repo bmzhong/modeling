@@ -2,8 +2,8 @@ clc;clear;
 dt=0.001;  %离散化后时间的最小变化单位，
 smallZones=30.5; %小温区的长度
 interval=5;  %相邻小温区之间的间隔长度，
-Tm=[169 193 240 265];%小温区1~5，小温区6，小温区7，小温区8~9的温度向量Tm
-velocity=99/60; %以cm/s为单位时的速度值velocity，
+Tm=[177 199 231 265];%小温区1~5，小温区6，小温区7，小温区8~9的温度向量Tm
+velocity=100/60; %以cm/s为单位时的速度值velocity，
 [R,U]=getTemperature(Tm,velocity); %得到温度数据
 
 %画炉温曲线
@@ -11,13 +11,10 @@ velocity=99/60; %以cm/s为单位时的速度值velocity，
 index=find(R>=217);
 index3=index(1);
 index4=index(end);%最后一个大于等于217℃的下标，
-y1=R(peakIndex:index4);
-x1=zeros(1,index4-peakIndex+1);
-for i=peakIndex:index4
-    x1(i-peakIndex+1)=(2*peakIndex-i)*0.5;
-end
-x1=flip(x1,2);
-y1=flip(y1,2);
+% y1=R(peakIndex:index4);
+x1=(index3:peakIndex)*0.5;
+% x1=flip(x1,2);
+y1=217*ones(1,peakIndex-index3+1);
 x2=zeros(1,peakIndex-index3+1);
 for i=index3:peakIndex
     x2(i-index3+1)=i*0.5;
@@ -47,6 +44,9 @@ hold on
 g1=plot(x0,y0,'--','LineWidth',1.5);
 set(g1,'handlevisibility','off');
 text(5,peak-5,'峰值温度','FontSize',12);
+hold on
+plot(peakIndex*0.5,peak,'or','MarkerSize',7,'MarkerFaceColor','r');
+legend('炉温曲线','峰值');
 x3=[0,index4*0.5];
 y3=[217,217];
 hold on
@@ -56,10 +56,7 @@ hold on
 hold on
 set(g2,'handlevisibility','off');
 text(5,217-5,'217','FontSize',12);
-plot(peakIndex*0.5,peak,'or','MarkerSize',7,'MarkerFaceColor','r');
-hold on
-legend('炉温曲线','峰值');
-text(193,223,'S2','FontSize',12);
+% text(240,220,'S2','FontSize',12);
 % text(251,228,'S1','FontSize',15);
 axis([0 270 0 250]);
 set(gca,'xtick',0:10:270);

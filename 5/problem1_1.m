@@ -25,7 +25,12 @@ flag=isConstraint(U);%是否满足制程界限，1表示是，0表示否，
 fprintf('是否满足制程界限(1表示满足，0表示不满足):   %d\n',flag);
 fprintf('小温区3,6,7中心焊接区域中心的温度: %d  %d   %d\n',T3,T6,T7);
 fprintf('小温区8结束处焊接区域中心的温度: %5d\n',T8);
-
+% len=length(U);
+% maxSclope=0;
+% for k=1:len-1
+%     maxSclope=max(maxSclope,abs(U(k+1)-U(k))/dt);
+% end
+% maxSclope
 %画炉温曲线
 [peak,peakIndex]=max(R);%查找峰值及其下标
 index3=find(R>=217);
