@@ -35,7 +35,6 @@ X=(0:len-1)*0.5;%时间轴
 plot(X,R,'-db','LineWidth',2.5,'MarkerIndices',1:30:len,'MarkerSize',7,'MarkerFaceColor','b');
 xlabel('时间(s)');
 ylabel('温度(℃)');
-legend('炉温曲线');
 x0=[0,peakIndex*0.5];
 y0=[peak,peak];
 hold on
@@ -48,6 +47,9 @@ hold on
 g2=plot(x1,y1,'--','LineWidth',1.5);
 set(g2,'handlevisibility','off');
 text(5,217-5,'217','FontSize',12);
+plot(peakIndex*0.5,peak,'or','MarkerSize',7,'MarkerFaceColor','r');
+legend('炉温曲线','峰值');
+text(peakIndex*0.5-15,peak-8,['峰值(',num2str(floor(peakIndex*0.5)),',',num2str(floor(peak)),')']);
 axis([0 340 0 250]);
 set(gca,'xtick',0:20:340);
 set(gca,'ytick',0:20:250);
